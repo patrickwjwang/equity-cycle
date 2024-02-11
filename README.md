@@ -3,7 +3,8 @@
 ## Task list
 
 - [ ] Finalize our framework and decide detail approach
-- [ ] Weekly slides
+- [ ] Send project details (ddl TODAY Sun 02/11)
+- [ ] Send weekly slides (ddl Fri 02/16) 
 - [ ] Stock data
   - [ ] Acquire stock data from bloomberg terminal (all NYSE, AMEX, and NASDAQ firms)
   - [ ] Stock data exploratory data analysis (graphs, summaries, covariance matrices, etc)
