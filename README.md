@@ -6,9 +6,10 @@
 - [ ] Send project details (ddl TODAY Sun 02/11)
 - [ ] Send weekly slides (ddl Fri 02/16) 
 - [ ] Stock data
-  - [ ] Acquire stock data from bloomberg terminal (all NYSE, AMEX, and NASDAQ firms)
+  - [ ] Acquire stock data and risk factors from bloomberg terminal (all NYSE, AMEX, and NASDAQ firms)
   - [ ] Stock data exploratory data analysis (graphs, summaries, covariance matrices, etc)
   - [ ] Construct portfolios (either do it our self or use portfolios contructed by others, e.g. French's data library)
+  - [ ] Construct portfolios to calculate risk factors return that are not in FF5 or HXZ (e.g. liquidity, credit score) 
 - [ ] Risk factors (features)
   - [ ] Exploratory data analysis (average return, covariance matrices, etc)
   - [ ] We have 10 (FF5 + MOM + HXZ) factors so far, add 3-5 more candidates
