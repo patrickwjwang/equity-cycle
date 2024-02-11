@@ -88,8 +88,6 @@ ff5_daily_df['Date'] = pd.to_datetime(ff5_daily_df['Date'], format='%Y%m%d')
 # Combine ff5 and momentum daily df
 ff6_daily_df = pd.merge(mom_daily_df, ff5_daily_df, on='Date', how='inner')
 ff6_daily_df = ff6_daily_df[ff6_daily_df['Date'].dt.year >= 1964]  # filter after 1964 since 1963 incomplete
-ff6_daily_df['Week'] = ff6_daily_df['Date'].dt.isocalendar().week  # create a column for week
-ff6_daily_df['Year'] = ff6_daily_df['Date'].dt.year  # create a column for year
 # ff6_daily_df.to_csv(os.path.join(processed_path, 'ff6_daily.csv'), index=False)  # Save ff6_daily_df to csv
 
 """
@@ -114,15 +112,19 @@ print(len(ff6_daily_df))  # 15103
 # Calculate the compound weekly return (this is not entirely accurate)
 def compound_returns(x):
     return (np.prod(1 + x) - 1) * 100
-ff6_daily_tmp = ff6_daily_df.drop(columns=['Date'])
-ff6_daily_tmp[ff6_daily_tmp.columns.difference(['Year', 'Week'])] /= 100  # convert returns to decimal
-ff6_week_df = ff6_daily_tmp.groupby(['Year', 'Week']).apply(compound_returns).drop(columns=['Week', 'Year'])
+ff6_daily_tmp = ff6_daily_df.copy()
+ff6_daily_tmp['Week'] = ff6_daily_df['Date'].dt.isocalendar().week  # create a column for week
+ff6_daily_tmp['Year'] = ff6_daily_df['Date'].dt.year  # create a column for year
+ff6_daily_tmp2 = ff6_daily_tmp.drop(columns=['Date'])
+ff6_daily_tmp2[ff6_daily_tmp2.columns.difference(['Year', 'Week'])] /= 100  # convert returns to decimal
+ff6_week_df = ff6_daily_tmp2.groupby(['Year', 'Week']).apply(compound_returns).drop(columns=['Week', 'Year'])
 ff6_week_df = ff6_week_df.reset_index()
 
 # Add the last day of the week back to ff6 weekly df
-last_day_of_week = ff6_daily_df.groupby(['Year', 'Week'])['Date'].max().reset_index()
+last_day_of_week = ff6_daily_tmp.groupby(['Year', 'Week'])['Date'].max().reset_index()
 ff6_week_df = pd.merge(ff6_week_df, last_day_of_week, on=['Year', 'Week'], how='left')
-columns_order = ['Year', 'Week', 'Date'] + [col for col in ff6_week_df.columns if col not in ['Year', 'Week', 'Date']]
+ff6_week_df = ff6_week_df.drop(columns=['Year', 'Week'])
+columns_order = ['Date'] + [col for col in ff6_week_df.columns if col not in ['Date']]
 ff6_week_df = ff6_week_df[columns_order]
 # ff6_week_df.to_csv(os.path.join(processed_path, 'ff6_weekly.csv'), index=False)  # Save ff6_week_df to csv
 
@@ -154,6 +156,7 @@ columns = list(hxz_monthly_df.columns)  # Rearrange columns to put 'Year_Month' 
 year_month_index = columns.index('Year_Month')
 columns.insert(2, columns.pop(year_month_index))
 hxz_monthly_df = hxz_monthly_df[columns]
+hxz_monthly_df = hxz_monthly_df.drop(columns=['Year', 'Month'])
 # hxz_monthly_df.to_csv(os.path.join(processed_path, 'hxz_monthly.csv'), index=False)   # Save HXZ monthly df to csv
 
 # Load HXZ weekly df

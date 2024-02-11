@@ -1,0 +1,19 @@
+\begin{table}
+\centering
+\caption{HXZ Factors (1967-01-06 to 2022-12-30, weekly return \%)}
+\label{tab:hxz_summary}
+\begin{tabular}{lrrrrrr}
+\toprule
+ & RF\_HXZ & Mkt-RF\_HXZ & ME\_HXZ & IA\_HXZ & ROE\_HXZ & EG\_HXZ \\
+\midrule
+count & 2922.00 & 2922.00 & 2922.00 & 2922.00 & 2922.00 & 2922.00 \\
+mean & 0.08 & 0.13 & 0.05 & 0.09 & 0.13 & 0.18 \\
+std & 0.06 & 2.28 & 1.27 & 0.93 & 1.07 & 0.91 \\
+min & -0.00 & -17.99 & -8.65 & -5.50 & -7.21 & -6.82 \\
+25\% & 0.03 & -1.11 & -0.68 & -0.41 & -0.39 & -0.29 \\
+50\% & 0.09 & 0.29 & 0.04 & 0.07 & 0.17 & 0.17 \\
+75\% & 0.12 & 1.42 & 0.76 & 0.57 & 0.68 & 0.65 \\
+max & 0.34 & 13.47 & 7.37 & 6.96 & 9.63 & 5.59 \\
+\bottomrule
+\end{tabular}
+\end{table}
