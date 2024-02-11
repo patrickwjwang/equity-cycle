@@ -5,8 +5,9 @@
 - [ ] Finalize our framework and decide detail approach
 - [ ] Send project details (ddl TODAY Sun 02/11)
 - [ ] Send weekly slides (ddl Fri 02/16) 
-- [ ] Stock data
+- [ ] Stock data and risk factors
   - [ ] Acquire stock data and risk factors from bloomberg terminal (all NYSE, AMEX, and NASDAQ firms) (Brain)
+  - [ ] Divide stock data by factors and calculate the return for the best and worst portfolio in each factor under different cycles (Brain)
   - [ ] Stock data exploratory data analysis (Patrick)
   - [ ] Construct optimal portfolios (Patrick)   
 - [ ] Risk factors (features) (Kenny)
