@@ -20,5 +20,4 @@
   - [ ] Some EDA (e.g. time series chart of business cycles)
   - [ ] Decide which index to use
   - [ ] Divide business cycles into 4 categories
-- [ ] Optimization
-- [ ] Model fitting
+- [ ] Model fitting: Do this after all the above are done, regress "optimal portfolios" on "selected factors"
