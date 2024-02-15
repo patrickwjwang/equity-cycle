@@ -12,6 +12,7 @@ mom_file = os.path.join(raw_data_dir, 'F-F_Momentum_Factor.CSV')
 mom_daily_file = os.path.join(raw_data_dir, 'F-F_Momentum_Factor_daily.CSV')  
 ff5_file = os.path.join(raw_data_dir, 'F-F_Research_Data_5_Factors_2x3.csv')  
 ff5_daily_file = os.path.join(raw_data_dir, 'F-F_Research_Data_5_Factors_2x3_daily.CSV')  
+bsc_file = os.path.join(raw_data_dir, 'business_cycles.csv')  
 
 # Load momentum file and replace NA values
 mom_df = pd.read_csv(mom_file, skiprows=13)  # 13 rows of descriptive headers
@@ -192,3 +193,5 @@ print(hxz_daily_df.head())  # 1967-01-03
 print(hxz_daily_df.tail())  # 2022-12-30
 print(len(hxz_daily_df))    # 14096
 """
+
+bsc_df = pd.read_csv(bsc_file)
