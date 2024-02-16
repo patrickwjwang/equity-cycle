@@ -47,7 +47,7 @@ def get_stock_data(tickers, category, start_date, end_date):
     pivoted_df = df.pivot(columns='Ticker', values=category).dropna(axis=1)
     return pivoted_df
 
-"""
+
 # Extract the s&p tickers from json
 with open(os.path.join(processed_dir, 'sp_tickers.json'), 'r') as file:
     tickers_data = file.read()
@@ -61,6 +61,7 @@ sp400_df = get_stock_data(all_tickers['SP400'], 'Adj Close', start_date, end_dat
 sp600_df = get_stock_data(all_tickers['SP600'], 'Adj Close', start_date, end_date)
 sp_combined_df = pd.concat([sp500_df, sp400_df, sp600_df], axis=1)
 
-# Store it to parquet instead of csv to save space
-sp_combined_df.to_parquet(os.path.join(processed_dir, 'sp1500_199603_200111.parquet')) 
-"""
+# Store it to csv
+sp_combined_df = sp_combined_df.round(2)
+sp_combined_df.to_csv(os.path.join(processed_dir, 'price_sample_199603_200111.csv')) 
+
