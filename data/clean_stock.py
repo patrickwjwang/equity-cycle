@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 
 
 # Current directory
@@ -7,38 +8,39 @@ current_dir = os.getcwd()
 tmp_data_dir = os.path.join(current_dir, 'data', 'raw', 'tmp')  # raw data directory
 processed_dir = os.path.join(current_dir, 'data', 'processed')  # processed data directory
 
+def convert_stock_price(path):
+    # Load stock price data, setting all columns to string type initially
+    df = pd.read_csv(path, dtype=str)
 
-
-def convert_stock_price(path, convert_type, start_name):
-    # Load stock price data and name first column
-    df = pd.read_csv(path, dtype={0: str})
+    # Rename the first column to 'Date' and convert to datetime
     df = df.rename(columns={df.columns[0]: 'Date'})
     df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
 
-    # Drop rows where 'Date' column is NaN    
+    # Drop rows where 'Date' column is NaN
     df.dropna(subset=['Date'], inplace=True)
     
     # Remove "US Equity" and strip white spaces from column names
     df.columns = [col.replace('US Equity', '').strip() for col in df.columns]
+
+    # Convert all columns except 'Date' to float using vectorized operation, convert errors to NaN
+    df.iloc[:, 1:] = df.iloc[:, 1:].apply(pd.to_numeric, errors='coerce')
+
+    return df
+
+
+stock_price_names = ['price_1.csv', 'price_2.csv', 'price_3.csv', 'price_4.csv']
+for idx, f in enumerate(stock_price_names):
+    price_df = convert_stock_price(os.path.join(tmp_data_dir, f))
+    # price_df.to_csv(os.path.join(processed_dir, f), index=False)
+    start, end = price_df['Date'].min(), price_df['Date'].max()
+    num_columns = price_df.shape[1]  # Number of columns
+    print(f"Cycle {idx+1} starts from {start}, ends with {end}, and has {num_columns} stocks.")
     
-    # Find start and end dates automatically
-    start_date = df['Date'].min().strftime('%y%m%d')
-    end_date = df['Date'].max().strftime('%y%m%d')
-    
-    # Generate filename based on start and end dates and convert type
-    start_date = df['Date'].min().strftime('%y%m%d')
-    end_date = df['Date'].max().strftime('%y%m%d')
-    filename = f"{start_name}_{start_date}_{end_date}.{convert_type}"    
-    return df, filename
+liquidity_names = ['turnover_1.csv', 'turnover_2.csv', 'turnover_3.csv', 'turnover_4.csv']
+for idx, f in enumerate(liquidity_names):
+    price_df = convert_stock_price(os.path.join(tmp_data_dir, f))
+    price_df.to_csv(os.path.join(processed_dir, f), index=False)
+    start, end = price_df['Date'].min(), price_df['Date'].max()
+    num_columns = price_df.shape[1]  # Number of columns
+    print(f"Cycle {idx+1} starts from {start}, ends with {end}, and has {num_columns} stocks.")
 
-
-price_1_df, name_1 = convert_stock_price(os.path.join(tmp_data_dir, 'price_1.csv'), 'csv', 'price_1')
-price_2_df, name_2 = convert_stock_price(os.path.join(tmp_data_dir, 'price_2.csv'), 'csv', 'price_2')
-price_3_df, name_3 = convert_stock_price(os.path.join(tmp_data_dir, 'price_3.csv'), 'csv', 'price_3')
-price_4_df, name_4 = convert_stock_price(os.path.join(tmp_data_dir, 'price_4.csv'), 'csv', 'price_4')
-
-# Convert to csv
-price_1_df.to_csv(os.path.join(processed_dir, name_1), index=False)
-price_2_df.to_csv(os.path.join(processed_dir, name_2), index=False) 
-price_3_df.to_csv(os.path.join(processed_dir, name_3), index=False) 
-price_4_df.to_csv(os.path.join(processed_dir, name_4), index=False) 
