@@ -81,8 +81,22 @@ class OptimalPortfolios:
         
         # Drop the columns
         self.dropped_stocks = cols_to_drop
-        self.stock_df = self.stock_df.drop(columns=cols_to_drop)        
+        self.stock_df = self.stock_df.drop(columns=cols_to_drop)
+        self.stock_df.index = pd.to_datetime(self.stock_df.index)        
         print(f"{len(cols_to_drop)} stocks removed, {self.stock_df.shape[1]} stocks remain.")
+
+    def get_transposed_weights_df(self):
+        # Transpose the weights dataframe
+        transposed_df = self._weights_df
+
+        # Rename the columns to 'weight_1', 'weight_2', ..., 'weight_n' in one step
+        column_names = {i : f'weight_{i}' for i in range(self.num_pfo)}
+        transposed_df = transposed_df.rename(columns=column_names)
+        
+        # Rename the 'index' column to 'tickers'
+        transposed_df = transposed_df.reset_index()
+        transposed_df = transposed_df.rename(columns={'index': 'tickers'})
+        self.weight_df = transposed_df
 
     def _calculate_daily_returns(self):        
         daily_returns = self.stock_df.pct_change()
@@ -149,3 +163,20 @@ class OptimalPortfolios:
         if self._annual_return is None:
             self._calculate_annual_returns()
         return self._annual_return
+    
+    @property
+    def weight_df(self):
+        if self._weights_df is None:
+            warnings.warn("Efficient frontier has not been calculated. Please run calculate_efficient_frontier first.")
+            return None
+        else:
+            # Transpose the weights dataframe
+            transposed_df = self._weights_df.T
+
+            # Rename the columns to 'weight_1', 'weight_2', ..., 'weight_n'
+            column_names = {i: f'weight_{i+1}' for i in range(self.num_pfo)}
+            transposed_df = transposed_df.rename(columns=column_names)
+            
+            # Rename the 'index' column to 'tickers' and reset index
+            transposed_df = transposed_df.reset_index().rename(columns={'index': 'tickers'})            
+            return transposed_df
