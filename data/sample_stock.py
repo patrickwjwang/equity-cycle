@@ -62,6 +62,6 @@ sp600_df = get_stock_data(all_tickers['SP600'], 'Adj Close', start_date, end_dat
 sp_combined_df = pd.concat([sp500_df, sp400_df, sp600_df], axis=1)
 
 # Store it to csv
-sp_combined_df = sp_combined_df.round(2)
-sp_combined_df.to_csv(os.path.join(processed_dir, 'price_sample_199603_200111.csv')) 
+sp_combined_df = sp_combined_df.round(4)
+sp_combined_df.to_csv(os.path.join(processed_dir, 'price_sample_960301_011130.csv')) 
 

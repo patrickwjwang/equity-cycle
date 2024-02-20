@@ -27,11 +27,16 @@ class OptimalPortfolios:
         print(op.weekly_return)
     """
 
-    def __init__(self, stock_df, num_pfo):
+    def __init__(self, stock_df, num_pfo, corr_threshold=None):
         self.stock_df = stock_df
         self.num_pfo = num_pfo
-        self._mu = expected_returns.mean_historical_return(stock_df)
-        self._cov_matrix = risk_models.sample_cov(stock_df)
+
+        # Automatically remove high correlation columns if threshold is provided
+        if corr_threshold is not None:
+            self.remove_high_corr_columns(corr_threshold)
+
+        self._mu = expected_returns.mean_historical_return(self.stock_df)
+        self._cov_matrix = risk_models.sample_cov(self.stock_df)
         self._ef = EfficientFrontier(self._mu, self._cov_matrix)
         self._ef.solver = 'Clarabel'        
         self._weights = []
@@ -59,6 +64,25 @@ class OptimalPortfolios:
             self.pfo_vars.append(pfo_var)
             self._weights.append(weights_arr)
         self._weights_df = pd.DataFrame(self._weights, columns=self.stock_df.columns)
+
+    def remove_high_corr_columns(self, threshold):
+        # Find indices where correlation is above the threshold
+        corr_matrix = self.stock_df.corr()
+        np.fill_diagonal(corr_matrix.values, np.nan)
+        high_corr_pairs = np.where(np.abs(corr_matrix) >= threshold)
+
+        # Extract the pairs and decide which column to drop
+        cols_to_drop = set()
+        for x, y in zip(*high_corr_pairs):
+            if x != y:
+                col1, col2 = self.stock_df.columns[x], self.stock_df.columns[y]
+                # Add only one column from each pair, ensuring no duplicate columns are added
+                cols_to_drop.add(col1)  
+        
+        # Drop the columns
+        self.dropped_stocks = cols_to_drop
+        self.stock_df = self.stock_df.drop(columns=cols_to_drop)        
+        print(f"{len(cols_to_drop)} stocks removed, {self.stock_df.shape[1]} stocks remain.")
 
     def _calculate_daily_returns(self):        
         daily_returns = self.stock_df.pct_change()
@@ -101,7 +125,7 @@ class OptimalPortfolios:
             portfolio_annual_returns[1:],  # Skip the first row
             index=annual_returns.index[1:],  # index skip first date
             columns=[f'portfolio_{i+1}' for i in range(self.num_pfo)])
-
+        
     @property
     def daily_return(self):
         if self._daily_return is None:

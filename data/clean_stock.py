@@ -38,7 +38,7 @@ price_3_df, name_3 = convert_stock_price(os.path.join(tmp_data_dir, 'price_3.csv
 price_4_df, name_4 = convert_stock_price(os.path.join(tmp_data_dir, 'price_4.csv'), 'csv', 'price_4')
 
 # Convert to csv
-price_1_df.to_csv(os.path.join(processed_dir, name_1))
-price_2_df.to_csv(os.path.join(processed_dir, name_2)) 
-price_3_df.to_csv(os.path.join(processed_dir, name_3)) 
-price_4_df.to_csv(os.path.join(processed_dir, name_4)) 
+price_1_df.to_csv(os.path.join(processed_dir, name_1), index=False)
+price_2_df.to_csv(os.path.join(processed_dir, name_2), index=False) 
+price_3_df.to_csv(os.path.join(processed_dir, name_3), index=False) 
+price_4_df.to_csv(os.path.join(processed_dir, name_4), index=False) 
