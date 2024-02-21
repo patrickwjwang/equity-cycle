@@ -44,3 +44,10 @@ for idx, f in enumerate(liquidity_names):
     num_columns = price_df.shape[1]  # Number of columns
     print(f"Cycle {idx+1} starts from {start}, ends with {end}, and has {num_columns} stocks.")
 
+credit_names = ['credit_risk_1.csv', 'credit_risk_2.csv', 'credit_risk_3.csv', 'credit_risk_4.csv']
+for idx, f in enumerate(credit_names):
+    df = convert_stock_price(os.path.join(tmp_data_dir, f))
+    df.to_csv(os.path.join(processed_dir, f), index=False)
+    start, end = df['Date'].min(), df['Date'].max()
+    num_columns = df.shape[1]  # Number of columns
+    print(f"Cycle {idx+1} starts from {start}, ends with {end}, and has {num_columns} stocks.")
