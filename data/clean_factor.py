@@ -136,10 +136,10 @@ print(len(ff6_week_df))    # 3131
 """
 
 # Load HXZ factors
-hxz_yearly_file = os.path.join(raw_data_dir, 'q5_factors_annual_2022.csv')
-hxz_monthly_file = os.path.join(raw_data_dir, 'q5_factors_monthly_2022.csv')
-hxz_weekly_file = os.path.join(raw_data_dir, 'q5_factors_weekly_2022.csv')
-hxz_daily_file = os.path.join(raw_data_dir, 'q5_factors_daily_2022.csv')
+hxz_yearly_file = os.path.join(raw_data_dir, 'q5_factors_annual_2023.csv')
+hxz_monthly_file = os.path.join(raw_data_dir, 'q5_factors_monthly_2023.csv')
+hxz_weekly_file = os.path.join(raw_data_dir, 'q5_factors_weekly_2023.csv')
+hxz_daily_file = os.path.join(raw_data_dir, 'q5_factors_daily_2023.csv')
 
 # Load HXZ yearly df
 hxz_yearly_df = pd.read_csv(hxz_yearly_file)
