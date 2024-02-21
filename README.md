@@ -19,7 +19,7 @@
   - [ ] Divide business cycles into 4 categories within each cycle (Yoshi, ideally before 2/23)
 - [ ] Risk factors (features)
   - [ ] Exploratory data analysis for FF6 and HXZ (Patrick, before 2/23) 
-  - [ ] Construct portfolios and calculate risk factors return not in FF5 or HXZ (liquidity and credit risk)  (Kenny)
+  - [ ] Construct portfolios and calculate risk factors return not in FF5 or HXZ (liquidity and credit risk)  (Kenny, ideally before 2/23)
   - [ ] Feature selection (Kenny, ideally before 3/1)
 - [ ] Model fitting:
   - [ ] Initial model fitting (e.g. fit FF6 and HXZ on optimal portfolios) (Yoshi, idealy before 3/1)
