@@ -21,7 +21,7 @@
 
 - Risk factors (features)
   - [x] Download and clean FF6 & HXZ risk factors (PATRICK) 
-  - [ ] EDA for FF6 and HXZ, and preliminary model fitting (e.g. regress optimal portfolio returns on factors) (YOSHI, ideally before FRI 3/1) 
+  - [ ] EDA for FF6 and HXZ, and preliminary model fitting (e.g. regress optimal portfolio returns on factors) (YOSHI, ideally before SUN 2/25) 
   - [ ] Construct portfolios and calculate risk factors return not in FF5 or HXZ (liquidity and credit risk)  (KENNY, ideally before SUN 2/25)
   - [ ] Feature selection (KENNY, ideally before FRI 3/1)
     
