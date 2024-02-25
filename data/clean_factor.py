@@ -143,12 +143,12 @@ hxz_daily_file = os.path.join(raw_data_dir, 'q5_factors_daily_2023.csv')
 
 # Load HXZ yearly df
 hxz_yearly_df = pd.read_csv(hxz_yearly_file)
-hxz_yearly_df.columns = ['Year', 'RF_HXZ', 'Mkt-RF_HXZ', 'ME_HXZ', 'IA_HXZ', 'ROE_HXZ', 'EG_HXZ']
+hxz_yearly_df.columns = ['Year', 'RF_HXZ', 'Mkt-RF_HXZ', 'ME', 'IA', 'ROE', 'EG']
 # hxz_yearly_df.to_csv(os.path.join(processed_path, 'hxz_yearly.csv'), index=False)   # Save HXZ yearly df to csv
 
 # Load HXZ monthly df
 hxz_monthly_df = pd.read_csv(hxz_monthly_file)
-hxz_monthly_df.columns = ['Year', 'Month', 'RF_HXZ', 'Mkt-RF_HXZ', 'ME_HXZ', 'IA_HXZ', 'ROE_HXZ', 'EG_HXZ']
+hxz_monthly_df.columns = ['Year', 'Month', 'RF_HXZ', 'Mkt-RF_HXZ', 'ME', 'IA', 'ROE', 'EG']
 
 # Create a 'Year_Month' column
 hxz_monthly_df['Year_Month'] = pd.to_datetime(hxz_monthly_df['Year'].astype(str) + hxz_monthly_df['Month'].astype(str).str.zfill(2), format='%Y%m')
@@ -162,13 +162,13 @@ hxz_monthly_df = hxz_monthly_df.drop(columns=['Year', 'Month'])
 
 # Load HXZ weekly df
 hxz_weekly_df = pd.read_csv(hxz_weekly_file)
-hxz_weekly_df.columns = ['Date', 'RF_HXZ', 'Mkt-RF_HXZ', 'ME_HXZ', 'IA_HXZ', 'ROE_HXZ', 'EG_HXZ']
+hxz_weekly_df.columns = ['Date', 'RF_HXZ', 'Mkt-RF_HXZ', 'ME', 'IA', 'ROE', 'EG']
 hxz_weekly_df['Date'] = pd.to_datetime(hxz_weekly_df['Date'], format='%Y%m%d')
 # hxz_weekly_df.to_csv(os.path.join(processed_path, 'hxz_weekly.csv'), index=False)   # Save HXZ weekly df to csv
 
 # Load HXZ daily df
 hxz_daily_df = pd.read_csv(hxz_daily_file)
-hxz_daily_df.columns = ['Date', 'RF_HXZ', 'Mkt-RF_HXZ', 'ME_HXZ', 'IA_HXZ', 'ROE_HXZ', 'EG_HXZ']
+hxz_daily_df.columns = ['Date', 'RF_HXZ', 'Mkt-RF_HXZ', 'ME', 'IA', 'ROE', 'EG']
 hxz_daily_df['Date'] = pd.to_datetime(hxz_daily_df['Date'], format='%Y%m%d')
 # hxz_daily_df.to_csv(os.path.join(processed_path, 'hxz_daily.csv'), index=False)   # Save HXZ daily df to csv
 
