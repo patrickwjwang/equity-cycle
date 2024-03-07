@@ -36,7 +36,8 @@ class OptimalPortfolios:
             self.remove_high_corr_columns(corr_threshold)
 
         self._mu = expected_returns.mean_historical_return(self.stock_df)
-        self._cov_matrix = risk_models.sample_cov(self.stock_df)
+        # self._cov_matrix = risk_models.sample_cov(self.stock_df)
+        self._cov_matrix = risk_models.CovarianceShrinkage(self.stock_df).ledoit_wolf()
         self._ef = EfficientFrontier(self._mu, self._cov_matrix)
         self._ef.solver = 'Clarabel'        
         self._weights = []
@@ -107,27 +108,34 @@ class OptimalPortfolios:
             portfolio_daily_returns[1:],  # Skip the first row
             index=self.stock_df.index[1:],  # index skip first date
             columns=[f'portfolio_{i+1}' for i in range(self.num_pfo)])
+    
+    def _compound_returns(self, x):
+        return (np.prod(1 + x) - 1)
 
-    def _calculate_weekly_returns(self):
-        weekly_returns = self.stock_df.resample('W-FRI').ffill().pct_change()
-        portfolio_weekly_returns = np.dot(weekly_returns.fillna(0), self._weights_df.T)
+    def _calculate_weekly_returns(self):                           
+        # Create Year_Week column
+        weekly_return = self._daily_return.copy().reset_index()
+        weekly_return['Date'] = pd.to_datetime(weekly_return['Date'])
+        weekly_return['Week'] = weekly_return['Date'].dt.isocalendar().week  
+        weekly_return['Year'] = weekly_return['Date'].dt.isocalendar().year
+        weekly_return['Year_Week'] = weekly_return['Year'].astype(str) + '-' + weekly_return['Week'].astype(str).str.zfill(2)
+        weekly_return.drop(columns=['Year', 'Week', 'Date'], inplace=True)
+        # Calculate weekly return 
+        weekly_return = weekly_return.groupby(['Year_Week']).apply(self._compound_returns)
+        self._weekly_return = weekly_return
 
-        # Set Date as index and name columns
-        self._weekly_return = pd.DataFrame(
-            portfolio_weekly_returns[1:],  # Skip the first row
-            index=weekly_returns.index[1:],  # index skip first date
-            columns=[f'portfolio_{i+1}' for i in range(self.num_pfo)])
-        
     def _calculate_monthly_returns(self):
-        # Resample to get the last trading day of the month
-        monthly_returns = self.stock_df.resample('M').ffill().pct_change()  
-        portfolio_monthly_returns = np.dot(monthly_returns.fillna(0), self._weights_df.T)
-
-        # Skip the first row and set Date as index and name columns
-        self._monthly_return = pd.DataFrame(
-            portfolio_monthly_returns[1:],  # Skip the first row
-            index=monthly_returns.index[1:],  # index skip first date
-            columns=[f'portfolio_{i+1}' for i in range(self.num_pfo)])
+        # Create Year_Month column
+        monthly_return = self._daily_return.copy().reset_index()
+        monthly_return['Date'] = pd.to_datetime(monthly_return['Date'])
+        monthly_return['Year_Month'] = monthly_return['Date'].dt.to_period('M')
+        monthly_return.drop(columns=['Date'], inplace=True)
+        #  Calculate monthly compound return
+        monthly_return = monthly_return.groupby(['Year_Month']).apply(self._compound_returns)
+        monthly_return = monthly_return.reset_index()
+        monthly_return['Year_Month'] = monthly_return['Year_Month'].astype('str')
+        monthly_return.set_index('Year_Month', inplace=True)
+        self._monthly_return = monthly_return
 
     def _calculate_annual_returns(self):
         # Resample to get the last trading day of the year
@@ -148,12 +156,16 @@ class OptimalPortfolios:
 
     @property
     def weekly_return(self):
+        if self._daily_return is None:
+            self._calculate_daily_returns()
         if self._weekly_return is None:
             self._calculate_weekly_returns()
         return self._weekly_return        
 
     @property
     def monthly_return(self):
+        if self._daily_return is None:
+            self._calculate_daily_returns()
         if self._monthly_return is None:
             self._calculate_monthly_returns()
         return self._monthly_return
