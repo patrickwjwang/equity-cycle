@@ -383,7 +383,7 @@ stargazer(
     font.size = 'small')
 
 # save factors of best model
-expansion_high_mdl <- forward_BIC_mdl
+expansion_high_mdl <- back_BIC_mdl
 expansion_high_factors <- attributes(expansion_high_mdl$terms)$term.labels
 print(paste0("Selected Factors: ", paste0(expansion_high_factors, collapse = ", ")))
 ```
@@ -454,7 +454,7 @@ stargazer(
     font.size = 'small')
 
 # save factors of best model
-downturn_low_mdl <- forward_AIC_mdl
+downturn_low_mdl <- back_AIC_mdl
 downturn_low_factors <- attributes(downturn_low_mdl$terms)$term.labels
 print(paste0("Selected Factors: ", paste0(downturn_low_factors, collapse = ", ")))
 ```
@@ -574,7 +574,7 @@ stargazer(
     font.size = 'small')
 
 # save factors of best model
-downturn_high_mdl <- back_BIC_mdl
+downturn_high_mdl <- forward_BIC_mdl
 downturn_high_factors <- attributes(downturn_high_mdl$terms)$term.labels
 print(paste0("Selected Factors: ", paste0(downturn_high_factors, collapse = ", ")))
 ```
@@ -645,7 +645,7 @@ stargazer(
     font.size = 'small')
 
 # save factors of best model
-depression_low_mdl <- back_AIC_mdl
+depression_low_mdl <- back_BIC_mdl
 depression_low_factors <- attributes(depression_low_mdl$terms)$term.labels
 print(paste0("Selected Factors: ", paste0(depression_low_factors, collapse = ", ")))
 ```
@@ -705,7 +705,7 @@ stargazer(
     font.size = 'small')
 
 # save factors of best model
-depression_med_mdl <- back_AIC_mdl
+depression_med_mdl <- back_BIC_mdl
 depression_med_factors <- attributes(depression_med_mdl$terms)$term.labels
 print(paste0("Selected Factors: ", paste0(depression_med_factors, collapse = ", ")))
 ```
