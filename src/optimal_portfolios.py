@@ -109,6 +109,15 @@ class OptimalPortfolios:
             index=self.stock_df.index[1:],  # index skip first date
             columns=[f'portfolio_{i+1}' for i in range(self.num_pfo)])
     
+    def _remove_large_date_gaps(self):
+        # Ensure the index is in datetime format
+        self._daily_return.index = pd.to_datetime(self._daily_return.index)
+        # Calculate the difference in days between consecutive dates
+        day_diffs = self._daily_return.index.to_series().diff().dt.days
+        # Filter out rows where the date difference is more than 30 days
+        filtered_indices = day_diffs[day_diffs <= 30].index
+        self._daily_return = self._daily_return.loc[filtered_indices]
+
     def _compound_returns(self, x):
         return (np.prod(1 + x) - 1)
 
@@ -152,12 +161,14 @@ class OptimalPortfolios:
     def daily_return(self):
         if self._daily_return is None:
             self._calculate_daily_returns()
+            self._remove_large_date_gaps()
         return self._daily_return
 
     @property
     def weekly_return(self):
         if self._daily_return is None:
             self._calculate_daily_returns()
+            self._remove_large_date_gaps()
         if self._weekly_return is None:
             self._calculate_weekly_returns()
         return self._weekly_return        
@@ -166,6 +177,7 @@ class OptimalPortfolios:
     def monthly_return(self):
         if self._daily_return is None:
             self._calculate_daily_returns()
+            self._remove_large_date_gaps()
         if self._monthly_return is None:
             self._calculate_monthly_returns()
         return self._monthly_return
