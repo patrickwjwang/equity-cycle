@@ -72,6 +72,11 @@ stargazer(
     no.space = FALSE, 
     column.sep.width = '3pt', 
     font.size = 'small')
+
+# save factors of best model
+recovery_low_mdl <- back_BIC_mdl
+recovery_low_factors <- attributes(recovery_low_mdl$terms)$term.labels
+print(paste0("Selected Factors: ", paste0(recovery_low_factors, collapse = ", ")))
 ```
 
 ## Stepwise Selection - Medium Return
@@ -99,7 +104,6 @@ null_mdl <- lm(
 forward_AIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward")
 # Forward selection (BIC)
 forward_BIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward", k = log(n))
-
 ```
 
 The table below contains the following regression information for the following stepwise selections:
@@ -127,6 +131,11 @@ stargazer(
     no.space = FALSE, 
     column.sep.width = '3pt', 
     font.size = 'small')
+
+# save factors of best model
+recovery_med_mdl <- back_AIC_mdl
+recovery_med_factors <- attributes(recovery_med_mdl$terms)$term.labels
+print(paste0("Selected Factors: ", paste0(recovery_med_factors, collapse = ", ")))
 ```
 
 ## Stepwise Selection - High Return
@@ -182,6 +191,11 @@ stargazer(
     no.space = FALSE, 
     column.sep.width = '3pt', 
     font.size = 'small')
+
+# save factors of best model
+recovery_high_mdl <- back_BIC_mdl
+recovery_high_factors <- attributes(recovery_high_mdl$terms)$term.labels
+print(paste0("Selected Factors: ", paste0(recovery_high_factors, collapse = ", ")))
 ```
 
 # Expansion Stage
@@ -248,6 +262,11 @@ stargazer(
     no.space = FALSE, 
     column.sep.width = '3pt', 
     font.size = 'small')
+
+# save factors of best model
+expansion_low_mdl <- back_BIC_mdl
+expansion_low_factors <- attributes(expansion_low_mdl$terms)$term.labels
+print(paste0("Selected Factors: ", paste0(expansion_low_factors, collapse = ", ")))
 ```
 
 ## Stepwise Selection - Medium Return
@@ -275,7 +294,6 @@ null_mdl <- lm(
 forward_AIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward")
 # Forward selection (BIC)
 forward_BIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward", k = log(n))
-
 ```
 
 The table below contains the following regression information for the following stepwise selections:
@@ -303,6 +321,11 @@ stargazer(
     no.space = FALSE, 
     column.sep.width = '3pt', 
     font.size = 'small')
+
+# save factors of best model
+expansion_med_mdl <- back_BIC_mdl
+expansion_med_factors <- attributes(expansion_med_mdl$terms)$term.labels
+print(paste0("Selected Factors: ", paste0(expansion_med_factors, collapse = ", ")))
 ```
 
 ## Stepwise Selection - High Return
@@ -358,6 +381,11 @@ stargazer(
     no.space = FALSE, 
     column.sep.width = '3pt', 
     font.size = 'small')
+
+# save factors of best model
+expansion_high_mdl <- forward_BIC_mdl
+expansion_high_factors <- attributes(expansion_high_mdl$terms)$term.labels
+print(paste0("Selected Factors: ", paste0(expansion_high_factors, collapse = ", ")))
 ```
 
 # Downturn Stage
@@ -424,6 +452,11 @@ stargazer(
     no.space = FALSE, 
     column.sep.width = '3pt', 
     font.size = 'small')
+
+# save factors of best model
+downturn_low_mdl <- forward_AIC_mdl
+downturn_low_factors <- attributes(downturn_low_mdl$terms)$term.labels
+print(paste0("Selected Factors: ", paste0(downturn_low_factors, collapse = ", ")))
 ```
 
 ## Stepwise Selection - Medium Return
@@ -479,6 +512,11 @@ stargazer(
     no.space = FALSE, 
     column.sep.width = '3pt', 
     font.size = 'small')
+
+# save factors of best model
+downturn_med_mdl <- forward_BIC_mdl
+downturn_med_factors <- attributes(downturn_med_mdl$terms)$term.labels
+print(paste0("Selected Factors: ", paste0(downturn_med_factors, collapse = ", ")))
 ```
 
 ## Stepwise Selection - High Return
@@ -534,6 +572,11 @@ stargazer(
     no.space = FALSE, 
     column.sep.width = '3pt', 
     font.size = 'small')
+
+# save factors of best model
+downturn_high_mdl <- back_BIC_mdl
+downturn_high_factors <- attributes(downturn_high_mdl$terms)$term.labels
+print(paste0("Selected Factors: ", paste0(downturn_high_factors, collapse = ", ")))
 ```
 
 # Depression Stage
@@ -600,6 +643,11 @@ stargazer(
     no.space = FALSE, 
     column.sep.width = '3pt', 
     font.size = 'small')
+
+# save factors of best model
+depression_low_mdl <- back_AIC_mdl
+depression_low_factors <- attributes(depression_low_mdl$terms)$term.labels
+print(paste0("Selected Factors: ", paste0(depression_low_factors, collapse = ", ")))
 ```
 
 ## Stepwise Selection - Medium Return
@@ -639,7 +687,7 @@ The table below contains the following regression information for the following 
 
 ```{r, results = 'asis'}
 #| echo: false
-
+#| 
 temp_sum <- summary(full_mdl)
 print(paste0("R^2 for Full Model: ", round(temp_sum$r.squared, 3)))
 print(paste0("Adjusted R^2 for Full Model: ", round(temp_sum$adj.r.squared, 3)))
@@ -655,6 +703,11 @@ stargazer(
     no.space = FALSE, 
     column.sep.width = '3pt', 
     font.size = 'small')
+
+# save factors of best model
+depression_med_mdl <- back_AIC_mdl
+depression_med_factors <- attributes(depression_med_mdl$terms)$term.labels
+print(paste0("Selected Factors: ", paste0(depression_med_factors, collapse = ", ")))
 ```
 
 ## Stepwise Selection - High Return
@@ -694,7 +747,7 @@ The table below contains the following regression information for the following 
 
 ```{r, results = 'asis'}
 #| echo: false
-
+#| 
 temp_sum <- summary(full_mdl)
 print(paste0("R^2 for Full Model: ", round(temp_sum$r.squared, 3)))
 print(paste0("Adjusted R^2 for Full Model: ", round(temp_sum$adj.r.squared, 3)))
@@ -710,4 +763,9 @@ stargazer(
     no.space = FALSE, 
     column.sep.width = '3pt', 
     font.size = 'small')
+
+# save factors of best model
+depression_high_mdl <- back_AIC_mdl
+depression_high_factors <- attributes(depression_high_mdl$terms)$term.labels
+print(paste0("Selected Factors: ", paste0(depression_high_factors, collapse = ", ")))
 ```
