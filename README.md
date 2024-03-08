@@ -4,8 +4,8 @@
 
 - [x] Send project details (Due Sun 2/11)
 - [x] Send notebook/github (Due Fri 2/23)
-- [ ] Send weekly slides (Due Fri 3/1)
-- [ ] Make interim presentation slides (DDL MON 3/4)
+- [x] Send weekly slides (Due Fri 3/1)
+- [x] Make interim presentation slides (DDL MON 3/4)
 
 ## Progress
 
