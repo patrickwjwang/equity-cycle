@@ -773,7 +773,9 @@ print(paste0("Selected Factors: ", paste0(depression_high_factors, collapse = ",
 
 # Final Factors
 
-**Note**: I simply took the union of the selected factors for each return level. While this works fine for *Recovery* and *Expansion*, we will probably have to handpick the factors for *Downturn* and *Depression*.
+1. Recovery & Expansion: I took the union of factors
+2. Downturn: I handpicked factors
+3. Depression: I took the intersect of factors
 
 ## Recovery
 
@@ -817,6 +819,7 @@ stargazer(
 
 targets <- c('R1-RF', 'R2-RF', 'R3-RF')
 expansion_factors <- union(expansion_low_factors, union(expansion_med_factors, expansion_high_factors))
+# expansion_factors <- intersect(expansion_low_factors, intersect(expansion_med_factors, expansion_high_factors))
 expansion_factors <- gsub("\`", "", expansion_factors)
 # print(paste0("Expansion Factors: ", paste0(expansion_factors, collapse = ", ")))
 
@@ -851,9 +854,11 @@ stargazer(
 #| echo: false
 
 targets <- c('R1-RF', 'R2-RF', 'R3-RF')
-downturn_factors <- union(downturn_low_factors, union(downturn_med_factors, downturn_high_factors))
-downturn_factors <- gsub("\`", "", downturn_factors)
+# downturn_factors <- union(downturn_low_factors, union(downturn_med_factors, downturn_high_factors))
+# downturn_factors <- intersect(downturn_low_factors, intersect(downturn_med_factors, downturn_high_factors))
+# downturn_factors <- gsub("\`", "", downturn_factors)
 # print(paste0("Downturn Factors: ", paste0(downturn_factors, collapse = ", ")))
+downturn_factors <- c('CRD', 'LIQ', 'Mkt-RF', 'RMW', 'SMB', 'IA', 'HML')
 
 lm_df <- downturn_df[c(targets, downturn_factors)]
 downturn_low_mdl <- lm(
@@ -886,7 +891,8 @@ stargazer(
 #| echo: false
 
 targets <- c('R1-RF', 'R2-RF', 'R3-RF')
-depression_factors <- union(depression_low_factors, union(depression_med_factors, depression_high_factors))
+# depression_factors <- union(depression_low_factors, union(depression_med_factors, depression_high_factors))
+depression_factors <- intersect(depression_low_factors, intersect(depression_med_factors, depression_high_factors))
 depression_factors <- gsub("\`", "", depression_factors)
 # print(paste0("Depression Factors: ", paste0(depression_factors, collapse = ", ")))
 
