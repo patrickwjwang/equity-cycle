@@ -1,0 +1,713 @@
+---
+title: "STAT 222 - Feature Selection"
+author: "Kenneth Chen"
+format: html
+editor: visual
+---
+
+# Recovery Stage
+
+```{r}
+#| message: false
+#| echo: false
+#| 
+library(tidyverse)
+library(here)
+library(stargazer)
+recovery_df <- read_csv(here("data/processed", "recovery_factor_candidates.csv"))
+```
+
+## Stepwise Selection - Low Return
+
+```{r}
+#| output: false
+#| echo: false
+#| 
+lm_df <- recovery_df %>%
+    select(-Year_Week, -Phase)
+n <- nrow(lm_df)
+# Full model with all factors
+full_mdl <- lm(
+    `R1-RF` ~ . - `R2-RF` - `R3-RF`, # Remove the other porftolio returns
+    data = lm_df
+)
+# Backward selection (AIC)
+back_AIC_mdl <- step(full_mdl, direction = "backward")
+# Backward selection (BIC)
+back_BIC_mdl <- step(full_mdl, direction = "backward", k = log(n))
+
+# Null model with no factors
+null_mdl <- lm(
+    `R1-RF` ~ 1,
+    data = lm_df
+)
+# Forward selection (AIC)
+forward_AIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward")
+# Forward selection (BIC)
+forward_BIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward", k = log(n))
+
+```
+
+The table below contains the following regression information for the following stepwise selections:
+
+1. Backward AIC
+2. Backward BIC
+3. Forward AIC
+4. Forward BIC
+
+```{r, results = 'asis'}
+#| echo: false
+temp_sum <- summary(full_mdl)
+print(paste0("R^2 for Full Model: ", round(temp_sum$r.squared, 3)))
+print(paste0("Adjusted R^2 for Full Model: ", round(temp_sum$adj.r.squared, 3)))
+# Selected model
+stargazer(
+    back_AIC_mdl,
+    back_BIC_mdl,
+    forward_AIC_mdl,
+    forward_BIC_mdl,
+    type = 'html',
+    header = FALSE,
+    single.row = FALSE,
+    no.space = FALSE, 
+    column.sep.width = '3pt', 
+    font.size = 'small')
+```
+
+## Stepwise Selection - Medium Return
+
+```{r}
+#| output: false
+#| echo: false
+#| 
+# Full model with all factors
+full_mdl <- lm(
+    `R2-RF` ~ . - `R1-RF` - `R3-RF`, # Remove the other porftolio returns
+    data = lm_df
+)
+# Backward selection (AIC)
+back_AIC_mdl <- step(full_mdl, direction = "backward")
+# Backward selection (BIC)
+back_BIC_mdl <- step(full_mdl, direction = "backward", k = log(n))
+
+# Null model with no factors
+null_mdl <- lm(
+    `R2-RF` ~ 1,
+    data = lm_df
+)
+# Forward selection (AIC)
+forward_AIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward")
+# Forward selection (BIC)
+forward_BIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward", k = log(n))
+
+```
+
+The table below contains the following regression information for the following stepwise selections:
+
+1. Backward AIC
+2. Backward BIC
+3. Forward AIC
+4. Forward BIC
+
+```{r, results = 'asis'}
+#| echo: false
+
+temp_sum <- summary(full_mdl)
+print(paste0("R^2 for Full Model: ", round(temp_sum$r.squared, 3)))
+print(paste0("Adjusted R^2 for Full Model: ", round(temp_sum$adj.r.squared, 3)))
+# Selected model
+stargazer(
+    back_AIC_mdl,
+    back_BIC_mdl,
+    forward_AIC_mdl,
+    forward_BIC_mdl,
+    type = 'html',
+    header = FALSE,
+    single.row = FALSE,
+    no.space = FALSE, 
+    column.sep.width = '3pt', 
+    font.size = 'small')
+```
+
+## Stepwise Selection - High Return
+
+```{r}
+#| output: false
+#| echo: false
+#| 
+# Full model with all factors
+full_mdl <- lm(
+    `R3-RF` ~ . - `R1-RF` - `R2-RF`, # Remove the other porftolio returns
+    data = lm_df
+)
+# Backward selection (AIC)
+back_AIC_mdl <- step(full_mdl, direction = "backward")
+# Backward selection (BIC)
+back_BIC_mdl <- step(full_mdl, direction = "backward", k = log(n))
+
+# Null model with no factors
+null_mdl <- lm(
+    `R3-RF` ~ 1,
+    data = lm_df
+)
+# Forward selection (AIC)
+forward_AIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward")
+# Forward selection (BIC)
+forward_BIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward", k = log(n))
+
+```
+
+The table below contains the following regression information for the following stepwise selections:
+
+1. Backward AIC
+2. Backward BIC
+3. Forward AIC
+4. Forward BIC
+
+```{r, results = 'asis'}
+#| echo: false
+
+temp_sum <- summary(full_mdl)
+print(paste0("R^2 for Full Model: ", round(temp_sum$r.squared, 3)))
+print(paste0("Adjusted R^2 for Full Model: ", round(temp_sum$adj.r.squared, 3)))
+# Selected model
+stargazer(
+    back_AIC_mdl,
+    back_BIC_mdl,
+    forward_AIC_mdl,
+    forward_BIC_mdl,
+    type = 'html',
+    header = FALSE,
+    single.row = FALSE,
+    no.space = FALSE, 
+    column.sep.width = '3pt', 
+    font.size = 'small')
+```
+
+# Expansion Stage
+
+```{r}
+#| message: false
+#| echo: false
+#| 
+expansion_df <- read_csv(here("data/processed", "expansion_factor_candidates.csv"))
+```
+
+## Stepwise Selection - Low Return
+
+```{r}
+#| output: false
+#| echo: false
+#| 
+lm_df <- expansion_df %>%
+    select(-Year_Week, -Phase)
+n <- nrow(lm_df)
+# Full model with all factors
+full_mdl <- lm(
+    `R1-RF` ~ . - `R2-RF` - `R3-RF`, # Remove the other porftolio returns
+    data = lm_df
+)
+# Backward selection (AIC)
+back_AIC_mdl <- step(full_mdl, direction = "backward")
+# Backward selection (BIC)
+back_BIC_mdl <- step(full_mdl, direction = "backward", k = log(n))
+
+# Null model with no factors
+null_mdl <- lm(
+    `R1-RF` ~ 1,
+    data = lm_df
+)
+# Forward selection (AIC)
+forward_AIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward")
+# Forward selection (BIC)
+forward_BIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward", k = log(n))
+```
+
+The table below contains the following regression information for the following stepwise selections:
+
+1. Backward AIC
+2. Backward BIC
+3. Forward AIC
+4. Forward BIC
+
+```{r, results = 'asis'}
+#| echo: false
+
+temp_sum <- summary(full_mdl)
+print(paste0("R^2 for Full Model: ", round(temp_sum$r.squared, 3)))
+print(paste0("Adjusted R^2 for Full Model: ", round(temp_sum$adj.r.squared, 3)))
+# Selected model
+stargazer(
+    back_AIC_mdl,
+    back_BIC_mdl,
+    forward_AIC_mdl,
+    forward_BIC_mdl,
+    type = 'html',
+    header = FALSE,
+    single.row = FALSE,
+    no.space = FALSE, 
+    column.sep.width = '3pt', 
+    font.size = 'small')
+```
+
+## Stepwise Selection - Medium Return
+
+```{r}
+#| output: false
+#| echo: false
+#| 
+# Full model with all factors
+full_mdl <- lm(
+    `R2-RF` ~ . - `R1-RF` - `R3-RF`, # Remove the other porftolio returns
+    data = lm_df
+)
+# Backward selection (AIC)
+back_AIC_mdl <- step(full_mdl, direction = "backward")
+# Backward selection (BIC)
+back_BIC_mdl <- step(full_mdl, direction = "backward", k = log(n))
+
+# Null model with no factors
+null_mdl <- lm(
+    `R2-RF` ~ 1,
+    data = lm_df
+)
+# Forward selection (AIC)
+forward_AIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward")
+# Forward selection (BIC)
+forward_BIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward", k = log(n))
+
+```
+
+The table below contains the following regression information for the following stepwise selections:
+
+1. Backward AIC
+2. Backward BIC
+3. Forward AIC
+4. Forward BIC
+
+```{r, results = 'asis'}
+#| echo: false
+
+temp_sum <- summary(full_mdl)
+print(paste0("R^2 for Full Model: ", round(temp_sum$r.squared, 3)))
+print(paste0("Adjusted R^2 for Full Model: ", round(temp_sum$adj.r.squared, 3)))
+# Selected model
+stargazer(
+    back_AIC_mdl,
+    back_BIC_mdl,
+    forward_AIC_mdl,
+    forward_BIC_mdl,
+    type = 'html',
+    header = FALSE,
+    single.row = FALSE,
+    no.space = FALSE, 
+    column.sep.width = '3pt', 
+    font.size = 'small')
+```
+
+## Stepwise Selection - High Return
+
+```{r}
+#| output: false
+#| echo: false
+#| 
+# Full model with all factors
+full_mdl <- lm(
+    `R3-RF` ~ . - `R1-RF` - `R2-RF`, # Remove the other porftolio returns
+    data = lm_df
+)
+# Backward selection (AIC)
+back_AIC_mdl <- step(full_mdl, direction = "backward")
+# Backward selection (BIC)
+back_BIC_mdl <- step(full_mdl, direction = "backward", k = log(n))
+
+# Null model with no factors
+null_mdl <- lm(
+    `R3-RF` ~ 1,
+    data = lm_df
+)
+# Forward selection (AIC)
+forward_AIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward")
+# Forward selection (BIC)
+forward_BIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward", k = log(n))
+
+```
+
+The table below contains the following regression information for the following stepwise selections:
+
+1. Backward AIC
+2. Backward BIC
+3. Forward AIC
+4. Forward BIC
+
+```{r, results = 'asis'}
+#| echo: false
+
+temp_sum <- summary(full_mdl)
+print(paste0("R^2 for Full Model: ", round(temp_sum$r.squared, 3)))
+print(paste0("Adjusted R^2 for Full Model: ", round(temp_sum$adj.r.squared, 3)))
+# Selected model
+stargazer(
+    back_AIC_mdl,
+    back_BIC_mdl,
+    forward_AIC_mdl,
+    forward_BIC_mdl,
+    type = 'html',
+    header = FALSE,
+    single.row = FALSE,
+    no.space = FALSE, 
+    column.sep.width = '3pt', 
+    font.size = 'small')
+```
+
+# Downturn Stage
+
+```{r}
+#| message: false
+#| echo: false
+#| 
+downturn_df <- read_csv(here("data/processed", "downturn_factor_candidates.csv"))
+```
+
+## Stepwise Selection - Low Return
+
+```{r}
+#| output: false
+#| echo: false
+#| 
+lm_df <- downturn_df %>%
+    select(-Year_Week, -Phase)
+n <- nrow(lm_df)
+# Full model with all factors
+full_mdl <- lm(
+    `R1-RF` ~ . - `R2-RF` - `R3-RF`, # Remove the other porftolio returns
+    data = lm_df
+)
+# Backward selection (AIC)
+back_AIC_mdl <- step(full_mdl, direction = "backward")
+# Backward selection (BIC)
+back_BIC_mdl <- step(full_mdl, direction = "backward", k = log(n))
+
+# Null model with no factors
+null_mdl <- lm(
+    `R1-RF` ~ 1,
+    data = lm_df
+)
+# Forward selection (AIC)
+forward_AIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward")
+# Forward selection (BIC)
+forward_BIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward", k = log(n))
+```
+
+The table below contains the following regression information for the following stepwise selections:
+
+1. Backward AIC
+2. Backward BIC
+3. Forward AIC
+4. Forward BIC
+
+```{r, results = 'asis'}
+#| echo: false
+
+temp_sum <- summary(full_mdl)
+print(paste0("R^2 for Full Model: ", round(temp_sum$r.squared, 3)))
+print(paste0("Adjusted R^2 for Full Model: ", round(temp_sum$adj.r.squared, 3)))
+# Selected model
+stargazer(
+    back_AIC_mdl,
+    back_BIC_mdl,
+    forward_AIC_mdl,
+    forward_BIC_mdl,
+    type = 'html',
+    header = FALSE,
+    single.row = FALSE,
+    no.space = FALSE, 
+    column.sep.width = '3pt', 
+    font.size = 'small')
+```
+
+## Stepwise Selection - Medium Return
+
+```{r}
+#| output: false
+#| echo: false
+#| 
+# Full model with all factors
+full_mdl <- lm(
+    `R2-RF` ~ . - `R1-RF` - `R3-RF`, # Remove the other porftolio returns
+    data = lm_df
+)
+# Backward selection (AIC)
+back_AIC_mdl <- step(full_mdl, direction = "backward")
+# Backward selection (BIC)
+back_BIC_mdl <- step(full_mdl, direction = "backward", k = log(n))
+
+# Null model with no factors
+null_mdl <- lm(
+    `R2-RF` ~ 1,
+    data = lm_df
+)
+# Forward selection (AIC)
+forward_AIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward")
+# Forward selection (BIC)
+forward_BIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward", k = log(n))
+
+```
+
+The table below contains the following regression information for the following stepwise selections:
+
+1. Backward AIC
+2. Backward BIC
+3. Forward AIC
+4. Forward BIC
+
+```{r, results = 'asis'}
+#| echo: false
+
+temp_sum <- summary(full_mdl)
+print(paste0("R^2 for Full Model: ", round(temp_sum$r.squared, 3)))
+print(paste0("Adjusted R^2 for Full Model: ", round(temp_sum$adj.r.squared, 3)))
+# Selected model
+stargazer(
+    back_AIC_mdl,
+    back_BIC_mdl,
+    forward_AIC_mdl,
+    forward_BIC_mdl,
+    type = 'html',
+    header = FALSE,
+    single.row = FALSE,
+    no.space = FALSE, 
+    column.sep.width = '3pt', 
+    font.size = 'small')
+```
+
+## Stepwise Selection - High Return
+
+```{r}
+#| output: false
+#| echo: false
+#| 
+# Full model with all factors
+full_mdl <- lm(
+    `R3-RF` ~ . - `R1-RF` - `R2-RF`, # Remove the other porftolio returns
+    data = lm_df
+)
+# Backward selection (AIC)
+back_AIC_mdl <- step(full_mdl, direction = "backward")
+# Backward selection (BIC)
+back_BIC_mdl <- step(full_mdl, direction = "backward", k = log(n))
+
+# Null model with no factors
+null_mdl <- lm(
+    `R3-RF` ~ 1,
+    data = lm_df
+)
+# Forward selection (AIC)
+forward_AIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward")
+# Forward selection (BIC)
+forward_BIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward", k = log(n))
+
+```
+
+The table below contains the following regression information for the following stepwise selections:
+
+1. Backward AIC
+2. Backward BIC
+3. Forward AIC
+4. Forward BIC
+
+```{r, results = 'asis'}
+#| echo: false
+
+temp_sum <- summary(full_mdl)
+print(paste0("R^2 for Full Model: ", round(temp_sum$r.squared, 3)))
+print(paste0("Adjusted R^2 for Full Model: ", round(temp_sum$adj.r.squared, 3)))
+# Selected model
+stargazer(
+    back_AIC_mdl,
+    back_BIC_mdl,
+    forward_AIC_mdl,
+    forward_BIC_mdl,
+    type = 'html',
+    header = FALSE,
+    single.row = FALSE,
+    no.space = FALSE, 
+    column.sep.width = '3pt', 
+    font.size = 'small')
+```
+
+# Depression Stage
+
+```{r}
+#| message: false
+#| echo: false
+#| 
+depression_df <- read_csv(here("data/processed", "depression_factor_candidates.csv"))
+```
+
+## Stepwise Selection - Low Return
+
+```{r}
+#| output: false
+#| echo: false
+#| 
+lm_df <- depression_df %>%
+    select(-Year_Week, -Phase)
+n <- nrow(lm_df)
+# Full model with all factors
+full_mdl <- lm(
+    `R1-RF` ~ . - `R2-RF` - `R3-RF`, # Remove the other porftolio returns
+    data = lm_df
+)
+# Backward selection (AIC)
+back_AIC_mdl <- step(full_mdl, direction = "backward")
+# Backward selection (BIC)
+back_BIC_mdl <- step(full_mdl, direction = "backward", k = log(n))
+
+# Null model with no factors
+null_mdl <- lm(
+    `R1-RF` ~ 1,
+    data = lm_df
+)
+# Forward selection (AIC)
+forward_AIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward")
+# Forward selection (BIC)
+forward_BIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward", k = log(n))
+```
+
+The table below contains the following regression information for the following stepwise selections:
+
+1. Backward AIC
+2. Backward BIC
+3. Forward AIC
+4. Forward BIC
+
+```{r, results = 'asis'}
+#| echo: false
+
+temp_sum <- summary(full_mdl)
+print(paste0("R^2 for Full Model: ", round(temp_sum$r.squared, 3)))
+print(paste0("Adjusted R^2 for Full Model: ", round(temp_sum$adj.r.squared, 3)))
+# Selected model
+stargazer(
+    back_AIC_mdl,
+    back_BIC_mdl,
+    forward_AIC_mdl,
+    forward_BIC_mdl,
+    type = 'html',
+    header = FALSE,
+    single.row = FALSE,
+    no.space = FALSE, 
+    column.sep.width = '3pt', 
+    font.size = 'small')
+```
+
+## Stepwise Selection - Medium Return
+
+```{r}
+#| output: false
+#| echo: false
+#| 
+# Full model with all factors
+full_mdl <- lm(
+    `R2-RF` ~ . - `R1-RF` - `R3-RF`, # Remove the other porftolio returns
+    data = lm_df
+)
+# Backward selection (AIC)
+back_AIC_mdl <- step(full_mdl, direction = "backward")
+# Backward selection (BIC)
+back_BIC_mdl <- step(full_mdl, direction = "backward", k = log(n))
+
+# Null model with no factors
+null_mdl <- lm(
+    `R2-RF` ~ 1,
+    data = lm_df
+)
+# Forward selection (AIC)
+forward_AIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward")
+# Forward selection (BIC)
+forward_BIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward", k = log(n))
+
+```
+
+The table below contains the following regression information for the following stepwise selections:
+
+1. Backward AIC
+2. Backward BIC
+3. Forward AIC
+4. Forward BIC
+
+```{r, results = 'asis'}
+#| echo: false
+
+temp_sum <- summary(full_mdl)
+print(paste0("R^2 for Full Model: ", round(temp_sum$r.squared, 3)))
+print(paste0("Adjusted R^2 for Full Model: ", round(temp_sum$adj.r.squared, 3)))
+# Selected model
+stargazer(
+    back_AIC_mdl,
+    back_BIC_mdl,
+    forward_AIC_mdl,
+    forward_BIC_mdl,
+    type = 'html',
+    header = FALSE,
+    single.row = FALSE,
+    no.space = FALSE, 
+    column.sep.width = '3pt', 
+    font.size = 'small')
+```
+
+## Stepwise Selection - High Return
+
+```{r}
+#| output: false
+#| echo: false
+#| 
+# Full model with all factors
+full_mdl <- lm(
+    `R3-RF` ~ . - `R1-RF` - `R2-RF`, # Remove the other porftolio returns
+    data = lm_df
+)
+# Backward selection (AIC)
+back_AIC_mdl <- step(full_mdl, direction = "backward")
+# Backward selection (BIC)
+back_BIC_mdl <- step(full_mdl, direction = "backward", k = log(n))
+
+# Null model with no factors
+null_mdl <- lm(
+    `R3-RF` ~ 1,
+    data = lm_df
+)
+# Forward selection (AIC)
+forward_AIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward")
+# Forward selection (BIC)
+forward_BIC_mdl <- step(null_mdl, scope = list(lower = ~1, upper = full_mdl), direction = "forward", k = log(n))
+
+```
+
+The table below contains the following regression information for the following stepwise selections:
+
+1. Backward AIC
+2. Backward BIC
+3. Forward AIC
+4. Forward BIC
+
+```{r, results = 'asis'}
+#| echo: false
+
+temp_sum <- summary(full_mdl)
+print(paste0("R^2 for Full Model: ", round(temp_sum$r.squared, 3)))
+print(paste0("Adjusted R^2 for Full Model: ", round(temp_sum$adj.r.squared, 3)))
+# Selected model
+stargazer(
+    back_AIC_mdl,
+    back_BIC_mdl,
+    forward_AIC_mdl,
+    forward_BIC_mdl,
+    type = 'html',
+    header = FALSE,
+    single.row = FALSE,
+    no.space = FALSE, 
+    column.sep.width = '3pt', 
+    font.size = 'small')
+```
