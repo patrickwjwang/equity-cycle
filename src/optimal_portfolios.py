@@ -49,18 +49,20 @@ class OptimalPortfolios:
         self.pfo_returns = []
         self.pfo_vars = []
     
-    def calculate_efficient_frontier(self):
+    def calculate_efficient_frontier(self):        
+        # Set target returns
         pfo_mu_min = self._mu.quantile(0.5)  # 50-quantile of stock return
         pfo_mu_max = self._mu.quantile(0.9)  # 90-quantile of stock return
         return_range = np.linspace(pfo_mu_min, pfo_mu_max, self.num_pfo)
 
         for target_return in return_range:
+            # Minimize variance given return
             efficient_pfo = self._ef.efficient_return(target_return=target_return)
             weights_arr = np.array(list(efficient_pfo.values()))
-
+            # Calculate portfolio return and variance
             pfo_return = np.dot(self._mu, weights_arr)
             pfo_var = np.dot(weights_arr.T, np.dot(self._cov_matrix, weights_arr))
-
+            # Append to return, variance and weights to lists
             self.pfo_returns.append(pfo_return)
             self.pfo_vars.append(pfo_var)
             self._weights.append(weights_arr)
@@ -91,7 +93,7 @@ class OptimalPortfolios:
         transposed_df = self._weights_df
 
         # Rename the columns to 'weight_1', 'weight_2', ..., 'weight_n' in one step
-        column_names = {i : f'weight_{i}' for i in range(self.num_pfo)}
+        column_names = {i : f'weight_{i+1}' for i in range(self.num_pfo)}
         transposed_df = transposed_df.rename(columns=column_names)
         
         # Rename the 'index' column to 'tickers'
