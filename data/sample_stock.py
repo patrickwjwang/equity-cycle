@@ -63,5 +63,5 @@ sp_combined_df = pd.concat([sp500_df, sp400_df, sp600_df], axis=1)
 
 # Store it to csv
 sp_combined_df = sp_combined_df.round(4)
-sp_combined_df.to_csv(os.path.join(processed_dir, 'price_sample_960301_011130.csv')) 
+# sp_combined_df.to_csv(os.path.join(processed_dir, 'price_sample_960301_011130.csv')) 
 
